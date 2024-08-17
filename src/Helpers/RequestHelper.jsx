@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import SweetAlerts from '../Helpers/SweetAlerts';
+import SweetAlerts from './SweetAlertHelper';
 
 const RequestHelper = (props) => {
     const [error, setError] = useState(null);

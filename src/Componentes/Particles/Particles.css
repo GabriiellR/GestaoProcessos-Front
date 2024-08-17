@@ -1,0 +1,5 @@
+#particles {
+    position: fixed !important;
+    z-index: -500;
+    width: 100%;
+}
