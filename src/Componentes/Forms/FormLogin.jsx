@@ -13,8 +13,12 @@ export default (() => {
         const usuario = document.getElementById('usuario');
         const senha = document.getElementById('senha');
 
-
-        <RequestHelper callbackReturn={window.location.href="/chamados"} />
+        const { response, loading, error } = new RequestHelper()
+                                            .usePost()
+                                            .setUrl('auth')
+                                            .setBody({ "usuario": usuario, "senha": senha })
+                                            .useHeadersApplicationJson()
+                                            .build();
     }
 
     return (<>

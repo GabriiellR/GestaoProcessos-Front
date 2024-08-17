@@ -11,7 +11,8 @@ export default ((props) => {
         didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
             toast.onmouseleave = Swal.resumeTimer;
-        }
+        },
+        didClose: props.callback
     });
     
     Toast.fire({

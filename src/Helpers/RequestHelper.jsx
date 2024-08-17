@@ -1,57 +1,109 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SweetAlerts from './SweetAlertHelper';
+import { GetToken, SaveToken } from './SessionHelper';
 
-const RequestHelper = (props) => {
-    const [error, setError] = useState(null);
-    const [hasFetched, setHasFetched] = useState(false);
+export default class RequestHelper {
 
-    const urlPadrao = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`;
+    constructor() {
+        this.urlPadrao = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`;
+        this.url = '';
+        this.method = '';
+        this.headers = {};
+        this.body = null
+    }
 
-    const handleDataFetched = useCallback((data) => {
-        props.callbackReturn(data);
-    }, [props.callbackReturn]);
+    useGet() {
+        this.setMethod("GET");
+        return this;
+    }
 
-    useEffect(() => {
+    usePost() {
+        this.setMethod("POST");
+        return this;
+    }
 
-        if (hasFetched) return;
+    useDelete() {
+        this.setMethod("DELETE");
+        return this;
+    }
 
-        const fetchData = async () => {
-            try {
-                const myHeaders = new Headers();
-                if (props.headers) {
-                    props.headers.forEach((header) => {
-                        myHeaders.append(header.key, header.value);
-                    });
-                }
+    usePut() {
+        this.setMethod("PUT");
+        return this;
+    }
 
-                const requestOptions = {
-                    method: props.method,
-                    headers: myHeaders,
-                };
+    setMethod(method) {
+        this.method = method;
+        return this;
+    }
 
-                const response = await fetch(`${urlPadrao}/${props.url}`, requestOptions);
+    setUrl(url) {
+        this.url = `${this.urlPadrao}/${url}`;
+        return this;
+    }
 
-                if (!response || !response.ok) {
-                    throw new Error(`Erro ao buscar os dados. - ${props.nome}`);
-                }
+    useHeadersToken() {
+        const token = GetToken();
+        const headersToken = { "Authorization": `Bearer ${token}` };
+        this.setHeaders(headersToken);
+        return this;
+    }
 
-                const data = await response.json();
-                handleDataFetched(data);
-                setHasFetched(true);
+    useHeadersApplicationJson() {
+        const headerApplicationJson = { "content-type": "Application/Json" };
+        this.setHeaders(headerApplicationJson);
+        return this;
+    }
 
-            } catch (error) {
-                setError(error.message);
-            }
+    setHeaders(headers) {
+        this.headers = { ...this.headers, ...headers };
+        return this;
+    }
+
+    setBody(body) {
+        this.body = body;
+        return this;
+    }
+
+    getOptions() {
+        return {
+            method: this.method,
+            headers: this.headers,
+            body: this.body ? JSON.stringify(this.body) : null,
         };
+    }
 
-        fetchData();
-    }, [props.method, props.url, props.headers, handleDataFetched, props.nome, hasFetched]); 
+    async build() {
 
-    return (
-        <>
-            {error && <SweetAlerts type="error" message={error} />}
-        </>
-    );
-};
+        const response = await fetch(this.url, this.getOptions());
 
-export default RequestHelper;
+        if (!response || !response.data) {
+            throw new Error(`Erro ao realizar a requisição`);
+        }
+
+        // const [data, setData] = useState(null);
+        // const [loading, setLoading] = useState(true);
+        // const [error, setError] = useState(null);
+
+        // useEffect(() => {
+        //     const fetchData = async () => {
+        //         setLoading(true);
+        //         try {
+                   
+
+        //             setData(result);
+        //         } catch (error) {
+        //             setError(error);
+        //         } finally {
+        //             setLoading(false);
+        //         }
+        //     };
+
+        //     if (builder.url) {
+        //         fetchData();
+        //     }
+        // }, [builder]);
+
+        // return { data, loading, error };
+    }
+}
