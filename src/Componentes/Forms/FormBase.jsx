@@ -7,9 +7,10 @@ export default ((props) => {
 
   const ValidarCampos = (event) => {
     const form = event.currentTarget;
+    event.preventDefault();
+    event.stopPropagation();
+
     if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
       setValidated(true);
       return false;
     }

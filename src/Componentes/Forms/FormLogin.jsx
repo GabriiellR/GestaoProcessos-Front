@@ -10,15 +10,17 @@ import SessionHelper from "../../Helpers/SessionHelper";
 export default (() => {
 
     const SalvarDados = () => {
-        const usuario = document.getElementById('usuario');
-        const senha = document.getElementById('senha');
+        const usuario = document.getElementById('usuario').value;
+        const senha = document.getElementById('senha').value;
 
-        const { response, loading, error } = new RequestHelper()
-                                            .usePost()
-                                            .setUrl('auth')
-                                            .setBody({ "usuario": usuario, "senha": senha })
-                                            .useHeadersApplicationJson()
-                                            .build();
+        const response = new RequestHelper()
+                             .usePost()
+                             .setUrl('auth')
+                             .setBody({ "usuario": usuario, "senha": senha })
+                             .useHeadersApplicationJson()
+                             .build();
+
+        console.log(usuario);
     }
 
     return (<>
