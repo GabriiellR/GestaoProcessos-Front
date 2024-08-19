@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import SweetAlerts from './SweetAlertHelper';
 import { GetToken, SaveToken } from './SessionHelper';
+import { Toast } from './SweetAlertHelper';
 
 export default class RequestHelper {
 
@@ -75,35 +74,32 @@ export default class RequestHelper {
 
     async build() {
 
-        const response = await fetch(this.url, this.getOptions());
+        try {
+            this.ExibirPreloader();
 
-        if (!response || !response.data) {
-            throw new Error(`Erro ao realizar a requisição`);
+            const response = await fetch(this.url, this.getOptions());
+
+            if (!response || !response.data) {
+                throw new Error(`Erro ao realizar a requisição`);
+            }
+        } catch (error) {
+            Toast('error', error.message);
+        } finally {
+            this.RemoverPreloader();
         }
+    }
 
-        // const [data, setData] = useState(null);
-        // const [loading, setLoading] = useState(true);
-        // const [error, setError] = useState(null);
+    ExibirPreloader() {
+        document.body.style.backgroundColor = '#fff';
+        document.body.style.opacity = 0.7;
+        document.body.style.pointerEvents = 'none';
+        document.body.style.cursor = 'wait';
+    }
 
-        // useEffect(() => {
-        //     const fetchData = async () => {
-        //         setLoading(true);
-        //         try {
-                   
-
-        //             setData(result);
-        //         } catch (error) {
-        //             setError(error);
-        //         } finally {
-        //             setLoading(false);
-        //         }
-        //     };
-
-        //     if (builder.url) {
-        //         fetchData();
-        //     }
-        // }, [builder]);
-
-        // return { data, loading, error };
+    RemoverPreloader() {
+        document.body.style.backgroundColor = 'transparent';
+        document.body.style.opacity = 1;
+        document.body.style.pointerEvents = 'auto';
+        document.body.style.cursor = 'default';
     }
 }

@@ -29,12 +29,13 @@ export default (() => {
                 [
                     <Row className="mb-3">
                         <InputGroup key={"usuario"} hasValidation>
-                            <InputGroup.Text id="usuario">Usuário</InputGroup.Text>
+                            <InputGroup.Text>Usuário</InputGroup.Text>
                             <Form.Control
                                 required
                                 placeholder="Usuário"
                                 aria-label="usuario"
                                 aria-describedby="usuario"
+                                id="usuario"
                             />
                         </InputGroup>
                         <Form.Control.Feedback type="invalid"><small>Informe um usuário.</small></Form.Control.Feedback>
@@ -42,13 +43,14 @@ export default (() => {
 
                     <Row className="mb-3">
                         <InputGroup key={"senha"} hasValidation>
-                            <InputGroup.Text id="usuario">Senha</InputGroup.Text>
+                            <InputGroup.Text>Senha</InputGroup.Text>
                             <Form.Control
                                 required
                                 type="password"
                                 placeholder="Senha"
                                 aria-label="senha"
                                 aria-describedby="senha"
+                                id="senha"
                             />
                         </InputGroup>
                     </Row>,

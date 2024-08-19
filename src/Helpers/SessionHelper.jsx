@@ -1,14 +1,12 @@
-import SweetAlertHelper from "./SweetAlertHelper";
+import { Toast } from "./SweetAlertHelper";
 
 export function GetToken() {
-
     var token = localStorage.getItem('token');
 
     if (!token) {
-        <SweetAlertHelper
-            type="error"
-            message="Faça login e tente novamente."
-            callback={(() => { location.href = location.origin + "/login" })} />
+        Toast('error', "Faça login e tente novamente", (() => {
+            window.location.href = window.location.origin + "/login"
+        }));
         return;
     }
 
@@ -20,10 +18,10 @@ export function SaveToken(token) {
 }
 
 export function ValidateToken() {
-    
+
 }
 
-export function ParseJwt() {
+export function ParseJwt(token) {
     try {
         return JSON.parse(atob(token.split('.')[1]));
     } catch (e) {
@@ -32,5 +30,4 @@ export function ParseJwt() {
 }
 
 
-
-// COMPONENTE RESPONSAVEL POR REALIZAR OPERACOES REFERENTE AO TOKEN;
+// // COMPONENTE RESPONSAVEL POR REALIZAR OPERACOES REFERENTE AO TOKEN;
