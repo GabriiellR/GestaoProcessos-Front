@@ -4,7 +4,7 @@ import { Toast } from './SweetAlertHelper';
 export default class RequestHelper {
 
     constructor() {
-        this.urlPadrao = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`;
+        this.urlPadrao = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}/api`;
         this.url = '';
         this.method = '';
         this.headers = {};
@@ -49,7 +49,7 @@ export default class RequestHelper {
     }
 
     useHeadersApplicationJson() {
-        const headerApplicationJson = { "content-type": "Application/Json" };
+        const headerApplicationJson = { "Content-Type": "application/json" };
         this.setHeaders(headerApplicationJson);
         return this;
     }
@@ -79,9 +79,13 @@ export default class RequestHelper {
 
             const response = await fetch(this.url, this.getOptions());
 
-            if (!response || !response.data) {
-                throw new Error(`Erro ao realizar a requisição`);
+            if (!response.ok) {
+                throw new Error(`Erro ao realizar requisição ${response.status}: ${response.statusText}`);
             }
+
+            const data = await response.json();
+            return data;
+
         } catch (error) {
             Toast('error', error.message);
         } finally {

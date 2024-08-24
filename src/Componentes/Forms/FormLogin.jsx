@@ -2,25 +2,35 @@ import { InputGroup, Form, Button, Row } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import FormBase from "./FormBase";
-
+import { Toast } from "../../Helpers/SweetAlertHelper";
 import RequestHelper from "../../Helpers/RequestHelper";
-import SessionHelper from "../../Helpers/SessionHelper";
+import { SaveToken } from "../../Helpers/SessionHelper";
 
 
 export default (() => {
 
-    const SalvarDados = () => {
+    const SalvarDados = async () => {
+
         const usuario = document.getElementById('usuario').value;
         const senha = document.getElementById('senha').value;
 
-        const response = new RequestHelper()
-                             .usePost()
-                             .setUrl('auth')
-                             .setBody({ "usuario": usuario, "senha": senha })
-                             .useHeadersApplicationJson()
-                             .build();
+        const requestHelper = new RequestHelper()
+            .usePost()
+            .setUrl('administracao/auth')
+            .setBody({ "login": usuario, "senha": senha })
+            .useHeadersApplicationJson();
 
-        console.log(usuario);
+        const response = await requestHelper.build();
+
+        if (!response || !response.data) {
+            Toast('error', `Login ou senha inválidos.`);
+            return;
+        }
+
+        Toast("success", "Login realizado com sucesso", (async () => {
+            await SaveToken(response.data);
+            window.location.href = "/";
+        }));
     }
 
     return (<>
